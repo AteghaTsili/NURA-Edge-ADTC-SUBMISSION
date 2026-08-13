@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.1.0",
+  "profiler_version": "adtc-profiler 0.1.0",
+  "submission": {
+    "team_id": "<YOUR_ADTF_TEAM_ID>",
+    "domain": "healthcare_medical",
+    "language_scope": [
+      "en"
+    ],
+    "african_alpha_claim": true,
+    "budget_laptop_claim": true,
+    "submitter": {
+      "name": "<YOUR_FULL_NAME>",
+      "email": "<YOUR_TEAM_EMAIL>",
+      "github_handle": "AteghaTsili"
+    },
+    "cross_disciplinary_pairing": {
+      "discipline": "public health / maternal healthcare",
+      "load_bearing": true,
+      "description": "NURA Edge is an offline maternal-health assistant for community health workers. It pairs a quantized language model with an offline RAG layer over a clinician-approved maternal-health corpus (local sentence-embedding + FAISS retrieval), so a 1.5B model grounds its triage answers in vetted guidance rather than recalling facts. A deterministic clinical risk rubric and a local datastore complete the patient journey. The retrieval pairing is load-bearing: without it the model loses its clinical grounding and the safety guarantee that answers map to clinician-approved content."
+    },
+    "test_prompts": [
+      {
+        "prompt_id": "tp_001",
+        "prompt": "A woman two weeks after a miscarriage is soaking more than one pad per hour and passing large clots. She also has a mild fever. What should the health worker do?"
+      },
+      {
+        "prompt_id": "tp_002",
+        "prompt": "A pregnant woman at 30 weeks reports a severe headache and blurred vision this morning. How should a community health worker respond, and what danger sign might this indicate?"
+      }
+    ],
+    "model": {
+      "name": "NURA-Edge-Qwen2.5-1.5B-Q4_K_M",
+      "runtime": "llama.cpp",
+      "quantization": "GGUF Q4_K_M",
+      "parameters_estimate": "1.5B",
+      "packaging": "binary_bundle"
+    }
+  },
+  "environment": {
+    "measured_on": "participant_laptop",
+    "cpu_model": "Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz",
+    "ram_gb": 16.0,
+    "gpu": "none",
+    "os": "macOS-26.5.2-x86_64-i386-64bit"
+  },
+  "throughput": {
+    "tokens_per_second_generation": 26.29,
+    "first_token_latency_ms": 2829.94,
+    "prompt_tokens": 512,
+    "generated_tokens": 128
+  },
+  "memory": {
+    "peak_rss_mb": 1705.6,
+    "steady_state_rss_mb": 1615.34,
+    "peak_vms_mb": 67987.23
+  },
+  "accuracy": [
+    {
+      "benchmark": "arc_easy",
+      "dataset_version": "lm-eval-harness",
+      "language": "en",
+      "samples": 50,
+      "score": 0.78,
+      "metric": "acc_norm"
+    }
+  ],
+  "cpu_thermal": {
+    "cpu_percent_p99": 70.5,
+    "core_temp_c_peak": null,
+    "throttled": false
+  },
+  "reproducibility": {
+    "git_commit_sha": "000000000000",
+    "docker_image_digest": "unknown",
+    "random_seed": 42
+  },
+  "model_info": {
+    "params_count": 1543714304,
+    "context_length": 32768,
+    "architecture": "qwen2",
+    "claimed_params_estimate": "1.5B",
+    "params_match": true
+  }
+}
