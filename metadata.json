@@ -1,27 +1,27 @@
-{
-  "team_id": "<NURA>",
+{{
+  "team_id": "NURA",
   "domain": "healthcare_medical",
   "language_scope": ["en"],
   "african_alpha_claim": true,
   "budget_laptop_claim": true,
   "submitter": {
-    "name": "<Muyang Roshella>",
-    "email": "<muyangroshella40@gmail.com>",
+    "name": "Muyang Roshella",
+    "email": "muyangroshella40@gmail.com",
     "github_handle": "AteghaTsili"
   },
   "cross_disciplinary_pairing": {
     "discipline": "public health / maternal healthcare",
     "load_bearing": true,
-    "description": "NURA Edge is an offline maternal-health assistant for community health workers. It pairs a quantized language model with an offline RAG layer over a clinician-approved maternal-health corpus (local sentence-embedding + FAISS retrieval), so a 1.5B model grounds its triage answers in vetted guidance rather than recalling facts. A deterministic clinical risk rubric and a local datastore complete the patient journey. The retrieval pairing is load-bearing: without it the model loses its clinical grounding and the safety guarantee that answers map to clinician-approved content."
+    "description": "NURA Edge is an offline maternal-health assistant that answers both pregnant women directly and community health workers on their behalf. It pairs a quantized language model with an offline RAG layer over a clinician-approved maternal-health corpus (local sentence-embedding + FAISS retrieval), so a 1.5B model grounds its triage answers in vetted guidance rather than recalling facts. A deterministic clinical risk rubric and a local datastore complete the patient journey. The retrieval pairing is load-bearing: without it the model loses its clinical grounding and the safety guarantee that answers map to clinician-approved content."
   },
   "test_prompts": [
     {
       "prompt_id": "tp_001",
-      "prompt": "A woman two weeks after a miscarriage is soaking more than one pad per hour and passing large clots. She also has a mild fever. What should the health worker do?"
+      "prompt": "My patient is two weeks past a miscarriage and is soaking more than one pad an hour with large clots, and now has a fever. What should I do?"
     },
     {
       "prompt_id": "tp_002",
-      "prompt": "A pregnant woman at 30 weeks reports a severe headache and blurred vision this morning. How should a community health worker respond, and what danger sign might this indicate?"
+      "prompt": "I am 30 weeks pregnant and since this morning I have a bad headache and my eyes are blurry. Should I be worried and what should I do?"
     }
   ],
   "model": {
