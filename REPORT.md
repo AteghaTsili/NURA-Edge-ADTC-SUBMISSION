@@ -2,7 +2,7 @@
 
 **Domain:** Healthcare & Medical (maternal-health triage, danger-sign recognition, patient education)
 **Team:** NURA (INTELLIKAM) · Cameroon
-**Model:** NURA-Edge-Qwen2.5-1.5B-Q3_K_M (llama.cpp, GGUF Q3_K_M)
+**Model:** NURA-Edge-Qwen2.5-1.5B-Q4_K_M (llama.cpp, GGUF Q4_K_M)
 
 ---
 
@@ -21,8 +21,8 @@ cloud API fees, unreliable connectivity, and intermittent power.
 - The community health worker, asking on a woman's behalf — "my patient is soaking
   more than one pad an hour after a miscarriage and has a fever, what should I do?"
 
-The same assistant answers both voices safely, recognising danger signs and
-directing the woman to care in time.
+The same assistant answers both voices, recognising danger signs and directing the
+woman to care in time.
 
 NURA Edge is the complete NURA maternal-health platform, re-engineered so its
 intelligence runs on a small quantized model instead of an expensive cloud LLM.
@@ -46,24 +46,24 @@ measures.
 licence, small footprint (large headroom under the 8 GB RAM profile), and strong
 multilingual support including French for the Francophone-African context.
 
-**Quantization — Q3_K_M.** We quantized the model to Q3_K_M GGUF using llama.cpp,
-producing an **~824 MB** file. We compared Q4_K_M, Q4_0, and Q3_K_M directly on our
-own maternal-health prompts: Q3_K_M was smaller and faster while, once combined
-with retrieval grounding, preserving clinical answer quality on danger-sign cases
-(pre-eclampsia, postpartum haemorrhage, neonatal sepsis). Because retrieval — not
-the model's weights — carries the clinical facts, the lower bit-width did not
-degrade the grounded answers, so we adopted it for the efficiency and throughput
-gains.
+**Quantization — Q4_K_M.** We quantized the model to 4-bit Q4_K_M using llama.cpp,
+producing a **945 MB** file — roughly a 3× reduction from the F16 GGUF. We compared
+Q4_K_M against the smaller Q4_0 and Q3_K_M directly on our own maternal-health
+danger-sign prompts. The lighter quantizations degraded the model's unaided
+danger-sign handling — on a postpartum-haemorrhage case, lower-bit versions buried
+the urgency and drifted toward generic advice — so we kept Q4_K_M, where the model
+leads with urgent referral and avoids unsafe suggestions. On a clinical tool the
+small size saving was not worth weaker danger-sign behaviour.
 
-**RAG instead of a larger or fine-tuned model.** A 1.5B model has weak factual
-recall, so we do not rely on it for clinical facts. An offline retrieval layer — a
-local sentence-embedding model (all-MiniLM-L6-v2) with FAISS vector search —
-grounds each answer in a clinician-approved maternal-health corpus. The model
-reasons over retrieved guidance and phrases a safe reply rather than recalling
-medicine from its weights. This keeps memory low, improves accuracy, and preserves
-NURA's core safety promise: answers map to clinician-approved content rather than
-being invented. Retrieval measurably corrected drift we observed in the raw model
-on newborn danger signs, which is why the pairing is load-bearing.
+**RAG for grounded deployment.** A 1.5B model has weak factual recall, so in
+deployment NURA Edge does not rely on it for clinical facts. An offline retrieval
+layer — a local sentence-embedding model (all-MiniLM-L6-v2) with FAISS vector
+search — grounds each answer in a clinician-approved maternal-health corpus, so the
+model reasons over retrieved guidance rather than recalling medicine from its
+weights. This keeps memory low, improves accuracy, and preserves NURA's safety
+promise: answers map to clinician-approved content. (The ADTC benchmark evaluates
+the model file directly; the retrieval layer is part of the deployed system
+described here.)
 
 **African-context corpus.** The corpus is grounded in WHO and regional guidance and
 covers the danger signs that matter most in Sub-Saharan Africa: pregnancy and
@@ -99,19 +99,24 @@ Measured with the official ADTC profiler on real 8 GB target-class hardware
 
 | Metric | Value | Notes |
 |---|---|---|
-| Model size on disk | ~824 MB | Q3_K_M GGUF |
+| Model size on disk | 945 MB | Q4_K_M GGUF |
 | Parameters | 1.54B | matches claimed 1.5B |
-| Peak RAM (RSS) | under 1.7 GB | far under the 7 GB ceiling |
-| Throughput (generation) | ~21 tokens/sec (native, unconstrained); ~9–11 tokens/sec on a passively-cooled 8 GB laptop | CPU-only |
-| Local accuracy (arc_easy, 50 samples) | ~0.80 acc_norm | general-reasoning self-check |
+| Peak RAM (RSS) | 1,688 MB (1.65 GB) | far under the 7 GB ceiling |
+| Steady-state RAM | 1,605 MB | |
+| Throughput (generation) | 9.37 tokens/sec | on a passively-cooled 8 GB laptop |
+| First-token latency | 8,855 ms | |
+| CPU utilization (p99) | 97.8% | |
+| Thermal throttling | yes (this laptop) | see note below |
+| Local accuracy (arc_easy, 50 samples) | 0.80 acc_norm | general-reasoning self-check |
 
-Note: on a passively-cooled 8 GB laptop the CPU reached high temperatures and
-throttled under sustained benchmarking; peak RAM stayed near 1.6–1.7 GB throughout.
-On better-cooled hardware of the same class, throughput is higher and no throttling
-occurs. Domain accuracy in evaluation comes from the model's grounded answers to
-maternal-health prompts, where RAG retrieval over the clinician-approved corpus is
-the primary driver of correctness and safety, for both the woman's voice and the
-health worker's.
+**Interpretation.** Peak RAM stayed near 1.65 GB throughout — about a quarter of the
+budget — so efficiency headroom is large and disqualification on memory is not a
+risk. On this particular passively-cooled laptop the CPU reached ~98°C and throttled
+under sustained benchmarking; on better-cooled hardware of the same class (and on a
+higher-spec machine we also tested) no throttling occurs and throughput is higher
+(~18–26 tokens/sec). Domain accuracy in evaluation comes from the model's answers
+to maternal-health prompts; we selected Q4_K_M specifically because it handles
+danger-sign prompts more safely than lighter quantizations.
 
 ---
 
