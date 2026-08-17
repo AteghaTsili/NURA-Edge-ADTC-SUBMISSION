@@ -12,7 +12,7 @@
   "cross_disciplinary_pairing": {
     "discipline": "public health / maternal healthcare",
     "load_bearing": true,
-    "description": "NURA Edge is an offline maternal-health assistant that answers both pregnant women directly and community health workers on their behalf. It pairs a quantized language model with an offline RAG layer over a clinician-approved maternal-health corpus (local sentence-embedding + FAISS retrieval), so a 1.5B model grounds its triage answers in vetted guidance rather than recalling facts. A deterministic clinical risk rubric and a local datastore complete the patient journey. The retrieval pairing is load-bearing: without it the model loses its clinical grounding and the safety guarantee that answers map to clinician-approved content."
+    "description": "NURA Edge is an offline maternal-health assistant that answers both pregnant women directly and community health workers on their behalf. It pairs a quantized language model with an offline RAG layer over a clinician-approved maternal-health corpus (local sentence-embedding + FAISS retrieval), so the model grounds its triage answers in vetted guidance rather than recalling facts. A deterministic clinical risk rubric and a local datastore complete the patient journey. The retrieval pairing is load-bearing: without it the model loses its clinical grounding and the safety guarantee that answers map to clinician-approved content."
   },
   "test_prompts": [
     {
@@ -25,13 +25,13 @@
     }
   ],
   "model": {
-    "name": "NURA-Edge-Qwen2.5-1.5B-Q4_K_M",
+    "name": "NURA-Edge-Qwen2.5-3B-Q4_K_M",
     "runtime": "llama.cpp",
     "quantization": "GGUF Q4_K_M",
-    "parameters_estimate": "1.5B",
+    "parameters_estimate": "3B",
     "packaging": "binary_bundle"
   },
   "_runtime": {
-    "model_path": "model/nura-q4_k_m.gguf"
+    "model_path": "model/qwen3b-q4_k_m.gguf"
   }
 }
