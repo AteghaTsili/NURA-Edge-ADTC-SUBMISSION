@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
+# Download the NURA Edge model weight file.
+#   - Idempotent (safe to run multiple times).
+#   - Downloads without any credentials (public URL only).
+#   - Output path matches `_runtime.model_path` in metadata.json.
 set -euo pipefail
+
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MODEL_DIR="$HERE/model"
-MODEL_FILE="$MODEL_DIR/nura-3b-q4_k_m.gguf"
-MODEL_URL="https://huggingface.co/tsilimvo/nura-edge/resolve/main/nura-3b-q4_k_m.gguf"
+MODEL_FILE="$MODEL_DIR/nura-q4_k_m.gguf"
+MODEL_URL="https://huggingface.co/tsilimvo/nura-edge/resolve/main/nura-q4_k_m.gguf"
+
 mkdir -p "$MODEL_DIR"
+
 if [[ -f "$MODEL_FILE" ]]; then
   echo "model already present at $MODEL_FILE — skipping download"
   exit 0
 fi
-echo "downloading $MODEL_URL -> $MODEL_FILE (~1.9 GB)..."
+
+echo "downloading $MODEL_URL -> $MODEL_FILE (~945 MB)..."
 if command -v curl > /dev/null 2>&1; then
   curl -L --fail --progress-bar -o "$MODEL_FILE.partial" "$MODEL_URL"
 elif command -v wget > /dev/null 2>&1; then
