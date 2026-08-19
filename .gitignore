@@ -1,6 +1,0 @@
-model/*.gguf
-model/
-*.gguf
-__pycache__/
-*.pyc
-.DS_Store
